@@ -3,17 +3,19 @@ This project is an example of how to use opencv3.4.3 VideoCapture and VideoWrite
 It seems that opencv does not support video capture feature on Android platform. To use video capture, you need to compile opencv library to support it or you can use the library files in project.  
 
 
-Build opencv for android platform  
+## Build opencv for android platform  
 
-1.Modify CMakeLists.txt file in opencv root directory.  
+### 1.Modify CMakeLists.txt file in opencv root directory.  
 
 
-(1).change IF (NOT ANDROID AND NOT IOS AND NOT WINRT) to IF (NOT IOS AND NOT WINRT) as follows.  
+#### (1).change IF (NOT ANDROID AND NOT IOS AND NOT WINRT) to IF (NOT IOS AND NOT WINRT) as follows.  
+```
 #OCV_OPTION(WITH_FFMPEG         "Include FFMPEG support"                      ON   IF (NOT ANDROID AND NOT IOS AND NOT WINRT) )  
-OCV_OPTION(WITH_FFMPEG         "Include FFMPEG support"                      ON   IF (NOT IOS AND NOT WINRT) )  
+OCV_OPTION(WITH_FFMPEG         "Include FFMPEG support"                      ON   IF (NOT IOS AND NOT WINRT) )
+```
 
-
-(2).Change elseif (Win32) to elseif (Win32 or Android) as follows.  
+#### (2).Change elseif (Win32) to elseif (Win32 or Android) as follows.  
+```
 if(WITH_FFMPEG OR HAVE_FFMPEG)  
     if(OPENCV_FFMPEG_USE_FIND_PACKAGE)  
         status("    FFMPEG:"       HAVE_FFMPEG         THEN "YES (find_package)"                       ELSE "NO (find_package)")  
@@ -29,11 +31,11 @@ if(WITH_FFMPEG OR HAVE_FFMPEG)
     status("      swscale:"      FFMPEG_libswscale_FOUND    THEN "YES (ver ${FFMPEG_libswscale_VERSION})"    ELSE NO)  
     status("      avresample:"   FFMPEG_libavresample_FOUND THEN "YES (ver ${FFMPEG_libavresample_VERSION})" ELSE NO)  
 endif()  
+```
+#### 2.Modify cmake/OpenCVFindLibsVideo.cmake file in opencv root directory.  
 
-2.Modify cmake/OpenCVFindLibsVideo.cmake file in opencv root directory.  
-
-Add the following part to FFMPEG Section as below and replace FFMPEG_DIR with your own FFMPEG android library file directory.  
-
+Add the following part to FFMPEG section as below and replace FFMPEG_DIR with your own FFMPEG android library file directory.  
+```
 elseif(ANDROID)  
     set(HAVE_FFMPEG TRUE)  
     set(FFMPEG_DIR ${OpenCV_SOURCE_DIR}/../ffmpeg)  
@@ -48,7 +50,7 @@ elseif(ANDROID)
 #--- FFMPEG ---  
 ocv_clear_vars(HAVE_FFMPEG)  
 if(WITH_FFMPEG)  # try FFmpeg autodetection  
-    if(OPENCV_FFMPEG_USE_FIND_PACKAGE)  
+         if(OPENCV_FFMPEG_USE_FIND_PACKAGE)  
         ...  
     elseif(WIN32 AND NOT ARM AND NOT OPENCV_FFMPEG_SKIP_DOWNLOAD)  
         ...  
@@ -56,21 +58,22 @@ if(WITH_FFMPEG)  # try FFmpeg autodetection
         ...  
     elseif(ANDROID)  
         set(HAVE_FFMPEG TRUE)  
-    set(FFMPEG_DIR ${OpenCV_SOURCE_DIR}/../ffmpeg)  
-    set(FFMPEG_INCLUDE_DIRS ${FFMPEG_DIR}/libs/${ANDROID_ABI}/include)  
-    set(FFMPEG_LIBRARY_DIRS ${FFMPEG_DIR}/libs/${ANDROID_ABI}/lib)  
-    set(FFMPEG_LIBRARIES avcodec avformat avutil swscale z)  
-    message(STATUS "FFMPEG_INCLUDE_DIR: ${FFMPEG_INCLUDE_DIRS}")  
-    message(STATUS "FFMPEG_LIBRARY_DIRS: ${FFMPEG_LIBRARY_DIRS}")  
-    message(STATUS "FFMPEG_LIBRARIES: ${FFMPEG_LIBRARIES}")  
+        set(FFMPEG_DIR ${OpenCV_SOURCE_DIR}/../ffmpeg)  
+        set(FFMPEG_INCLUDE_DIRS ${FFMPEG_DIR}/libs/${ANDROID_ABI}/include)  
+        set(FFMPEG_LIBRARY_DIRS ${FFMPEG_DIR}/libs/${ANDROID_ABI}/lib)  
+        set(FFMPEG_LIBRARIES avcodec avformat avutil swscale z)  
+        message(STATUS "FFMPEG_INCLUDE_DIR: ${FFMPEG_INCLUDE_DIRS}")  
+        message(STATUS "FFMPEG_LIBRARY_DIRS: ${FFMPEG_LIBRARY_DIRS}")  
+        message(STATUS "FFMPEG_LIBRARIES: ${FFMPEG_LIBRARIES}")  
     else()  
         ...  
     endif()  
 endif()  
+```
 
-3. Use NDK to compile opencv  
+### 3. Use NDK to compile opencv  
 
-Build command for arm64-v8a:  
+#### Build command for arm64-v8a:  
 
 cmake .. -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
 -DBUILD_SHARED_LIBS=OFF \
@@ -106,7 +109,7 @@ make
 make install   
 
 
-Build command for armeabi-v7a:  
+#### Build command for armeabi-v7a:  
 
 cmake .. -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
 -DBUILD_SHARED_LIBS=OFF \
