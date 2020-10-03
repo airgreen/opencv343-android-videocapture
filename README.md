@@ -15,19 +15,19 @@ OCV_OPTION(WITH_FFMPEG         "Include FFMPEG support"                      ON 
 
 (2).Change elseif (Win32) to elseif (Win32 or Android) as follows.  
 if(WITH_FFMPEG OR HAVE_FFMPEG)  
-  if(OPENCV_FFMPEG_USE_FIND_PACKAGE)  
-    status("    FFMPEG:"       HAVE_FFMPEG         THEN "YES (find_package)"                       ELSE "NO (find_package)")  
-  #elseif(WIN32)  
-  elseif(WIN32 OR ANDROID)  
-    status("    FFMPEG:"       HAVE_FFMPEG         THEN "YES (prebuilt binaries)"                  ELSE NO)  
-  else()  
-    status("    FFMPEG:"       HAVE_FFMPEG         THEN YES ELSE NO)  
-  endif()  
-  status("      avcodec:"      FFMPEG_libavcodec_FOUND    THEN "YES (ver ${FFMPEG_libavcodec_VERSION})"    ELSE NO)  
-  status("      avformat:"     FFMPEG_libavformat_FOUND   THEN "YES (ver ${FFMPEG_libavformat_VERSION})"   ELSE NO)  
-  status("      avutil:"       FFMPEG_libavutil_FOUND     THEN "YES (ver ${FFMPEG_libavutil_VERSION})"     ELSE NO)  
-  status("      swscale:"      FFMPEG_libswscale_FOUND    THEN "YES (ver ${FFMPEG_libswscale_VERSION})"    ELSE NO)  
-  status("      avresample:"   FFMPEG_libavresample_FOUND THEN "YES (ver ${FFMPEG_libavresample_VERSION})" ELSE NO)  
+    if(OPENCV_FFMPEG_USE_FIND_PACKAGE)  
+        status("    FFMPEG:"       HAVE_FFMPEG         THEN "YES (find_package)"                       ELSE "NO (find_package)")  
+    #elseif(WIN32)  
+    elseif(WIN32 OR ANDROID)  
+        status("    FFMPEG:"       HAVE_FFMPEG         THEN "YES (prebuilt binaries)"                  ELSE NO)  
+    else()  
+        status("    FFMPEG:"       HAVE_FFMPEG         THEN YES ELSE NO)  
+    endif()  
+    status("      avcodec:"      FFMPEG_libavcodec_FOUND    THEN "YES (ver ${FFMPEG_libavcodec_VERSION})"    ELSE NO)  
+    status("      avformat:"     FFMPEG_libavformat_FOUND   THEN "YES (ver ${FFMPEG_libavformat_VERSION})"   ELSE NO)  
+    status("      avutil:"       FFMPEG_libavutil_FOUND     THEN "YES (ver ${FFMPEG_libavutil_VERSION})"     ELSE NO)  
+    status("      swscale:"      FFMPEG_libswscale_FOUND    THEN "YES (ver ${FFMPEG_libswscale_VERSION})"    ELSE NO)  
+    status("      avresample:"   FFMPEG_libavresample_FOUND THEN "YES (ver ${FFMPEG_libavresample_VERSION})" ELSE NO)  
 endif()  
 
 2.Modify cmake/OpenCVFindLibsVideo.cmake file in opencv root directory.  
@@ -45,17 +45,17 @@ elseif(ANDROID)
     message(STATUS "FFMPEG_LIBRARIES: ${FFMPEG_LIBRARIES}")  
 
 
-# --- FFMPEG ---  
+#--- FFMPEG ---  
 ocv_clear_vars(HAVE_FFMPEG)  
 if(WITH_FFMPEG)  # try FFmpeg autodetection  
-  if(OPENCV_FFMPEG_USE_FIND_PACKAGE)  
-    ...  
-  elseif(WIN32 AND NOT ARM AND NOT OPENCV_FFMPEG_SKIP_DOWNLOAD)  
-    ...  
-  elseif(PKG_CONFIG_FOUND)  
-    ...  
-  elseif(ANDROID)  
-    set(HAVE_FFMPEG TRUE)  
+    if(OPENCV_FFMPEG_USE_FIND_PACKAGE)  
+        ...  
+    elseif(WIN32 AND NOT ARM AND NOT OPENCV_FFMPEG_SKIP_DOWNLOAD)  
+        ...  
+    elseif(PKG_CONFIG_FOUND)  
+        ...  
+    elseif(ANDROID)  
+        set(HAVE_FFMPEG TRUE)  
     set(FFMPEG_DIR ${OpenCV_SOURCE_DIR}/../ffmpeg)  
     set(FFMPEG_INCLUDE_DIRS ${FFMPEG_DIR}/libs/${ANDROID_ABI}/include)  
     set(FFMPEG_LIBRARY_DIRS ${FFMPEG_DIR}/libs/${ANDROID_ABI}/lib)  
@@ -63,9 +63,9 @@ if(WITH_FFMPEG)  # try FFmpeg autodetection
     message(STATUS "FFMPEG_INCLUDE_DIR: ${FFMPEG_INCLUDE_DIRS}")  
     message(STATUS "FFMPEG_LIBRARY_DIRS: ${FFMPEG_LIBRARY_DIRS}")  
     message(STATUS "FFMPEG_LIBRARIES: ${FFMPEG_LIBRARIES}")  
-  else()  
-    ...  
-  endif()  
+    else()  
+        ...  
+    endif()  
 endif()  
 
 3. Use NDK to compile opencv  
